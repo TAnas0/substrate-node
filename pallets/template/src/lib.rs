@@ -18,6 +18,7 @@ mod benchmarking;
 pub mod pallet {
 	use frame_support::pallet_prelude::*;
 	use frame_system::pallet_prelude::*;
+	use frame_support::log;
 
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
@@ -98,6 +99,14 @@ pub mod pallet {
 					Ok(())
 				},
 			}
+		}
+	}
+	
+	#[pallet::hooks]
+	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
+		fn offchain_worker(block_number: T::BlockNumber) {
+			log::info!("Hello from pallet-ocw.");
+			// The entry point of your code called by offchain worker
 		}
 	}
 }
