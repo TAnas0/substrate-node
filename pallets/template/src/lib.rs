@@ -20,6 +20,7 @@ pub mod pallet {
 	use frame_system::pallet_prelude::*;
 	use frame_system::offchain::CreateSignedTransaction;
 	use frame_support::log;
+	use frame_system::offchain::AppCrypto;
 
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
@@ -30,6 +31,7 @@ pub mod pallet {
 	pub trait Config: CreateSignedTransaction<Call<Self>> + frame_system::Config {
 		/// Because this pallet emits events, it depends on the runtime's definition of an event.
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+		type AuthorityId: AppCrypto<Self::Public, Self::Signature>;
 	}
 
 	// The pallet's runtime storage items.
