@@ -48,9 +48,10 @@ pub use sp_runtime::{Perbill, Permill};
 /// Import the template pallet.
 pub use pallet_template;
 
-use sp_runtime::generic::Era;
+use codec::Encode;
+use sp_runtime::{generic::Era, SaturatedConversion};
 use frame_support::log;
-use frame_support::traits;
+use sp_runtime::traits;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -642,4 +643,17 @@ impl<LocalCall> frame_system::offchain::CreateSignedTransaction<LocalCall>
 		let (call, extra, _) = raw_payload.deconstruct();
 		Some((call, (sp_runtime::MultiAddress::Id(address), signature, extra)))
 	}
+}
+
+impl frame_system::offchain::SigningTypes for Runtime {
+	type Public = <Signature as traits::Verify>::Signer;
+	type Signature = Signature;
+}
+
+impl<C> frame_system::offchain::SendTransactionTypes<C> for Runtime
+where
+	RuntimeCall: From<C>,
+{
+	type Extrinsic = UncheckedExtrinsic;
+	type OverarchingCall = RuntimeCall;
 }
